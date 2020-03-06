@@ -16,4 +16,6 @@ pip install pynput
 
 •**Every 10 seconds,You Get the Data from the Target Computer**
 
+•**If Target finds the Code and Open the File for Learn your MAIL and Password The Program DELETE itself.**
+
 

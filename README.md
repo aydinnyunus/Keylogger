@@ -12,7 +12,7 @@ pip install pynput
 
 ## USAGE
 
-•**Set your own MAIL and PASSWORD on "main.py".**
+•**Set your own MAIL and PASSWORD on "keylogger.py".**
 
 •**Run main.py on Target Computer**
 

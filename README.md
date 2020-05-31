@@ -15,7 +15,7 @@ pip install pynput
 
 •**Set your own MAIL and PASSWORD on "keylogger.py".**
 
-•**Run main.py on Target Computer**
+•**Run keylogger.py on Target Computer**
 
 •**Every 10 seconds,You Get the Data from the Target Computer**
 

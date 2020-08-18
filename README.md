@@ -32,6 +32,16 @@ pip install pynput
 
 ![github-small](/images/2.png)
 
+However, if you've made some money using my tools or just want to encourage me to continue creating stuff, please consider giving back on 
+**BTC Wallet : 1NqDy1VdF5wkvxBcojbADWexPhPzza6LGF** my efforts and help it grow by buying me coffee - but only if you're definitely able to! 😊🎉
+
+---
+
+### Contact Me !
+
+[<img target="_blank" src="https://img.icons8.com/bubbles/100/000000/linkedin.png" title="LinkedIn">](https://linkedin.com/in/yunus-ayd%C4%B1n-b9b01a18a/)       [<img target="_blank" src="https://img.icons8.com/bubbles/100/000000/github.png" title="Github">](https://github.com/aydinnyunus/WhatsappBOT)     [<img target="_blank" src="https://img.icons8.com/bubbles/100/000000/instagram-new.png" title="Instagram">](https://instagram.com/aydinyunus_/) [<img target="_blank" src="https://img.icons8.com/bubbles/100/000000/twitter.png" title="LinkedIn">](https://twitter.com/aydinnyunuss)
+
+
 ## Another Projects : 
 
 •**WHATSAPP BOT** : https://github.com/aydinnyunus/WhatsappBOT

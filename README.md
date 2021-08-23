@@ -4,10 +4,7 @@ Purpose of the project is testing the security of information systems
 
 ## INSTALLATION
 
-```
-pip install pynput
-
-```
+**You don't need to do anything for installation just run the script**
 
 ![github-small](/images/Adsız.png)
 

@@ -12,12 +12,10 @@ Purpose of the project is testing the security of information systems
 
 •**Create an account on "https://mailtrap.io/" using a temp mail.**
 
-![github-small](/images/mailtrap.png)
+![github-small](https://github.com/aydinnyunus/WifiPassword-Stealer/blob/master/images/dene.png?raw=true)
 
 
-•**Set your own SMTP USERNAME and SMTP PASSWORD on "main.py".**
-
-![github-small](/images/pass.png)
+•**Set your own SMTP USERNAME and SMTP PASSWORD on "keylogger.py".**
 
 
 •**Run keylogger.py on Target Computer**

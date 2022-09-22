@@ -10,7 +10,15 @@ Purpose of the project is testing the security of information systems
 
 ## USAGE
 
-•**Set your own MAIL and PASSWORD on "keylogger.py".**
+•**Create an account on "https://mailtrap.io/" using a temp mail.**
+
+![github-small](/images/mailtrap.png)
+
+
+•**Set your own SMTP USERNAME and SMTP PASSWORD on "main.py".**
+
+![github-small](/images/pass.png)
+
 
 •**Run keylogger.py on Target Computer**
 

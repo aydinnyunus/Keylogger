@@ -1,3 +1,4 @@
+Pillow==9.3.0
 pynput==1.7.3
-pyscreenshot==0.5.1
 sounddevice==0.4.3
+pyscreenshot==3.0

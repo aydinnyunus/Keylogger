@@ -30,7 +30,7 @@ python3 keylogger.py
 ```
 
 
-![github-small](/images/Adsız.png)
+![github-small](./images/Adsız.png)
 
 
 **Note:** By default, all the data will be logged after every 60 seconds from the target machine.
@@ -39,13 +39,12 @@ The program is self-destructive. If the target discovers and opens the code file
 
 ## Anti-Virus Test
 
-![github-small](/images/1.png)
+![github-small](./images/1.png)
 
-![github-small](/images/2.png)
+![github-small](./images/2.png)
 
 
 ---
-
 
 If you've found value in my tools and would like to support my ongoing creative endeavors, I would greatly appreciate your contribution to my BTC Wallet: 
 `1NqDy1VdF5wkvxBcojbADWexPhPzza6LGF`. Your generosity will not only motivate me but also help foster further growth. If you're in a position to do so, I'd be delighted if you could treat me to a coffee. Your kindness is truly appreciated! 😊🎉
@@ -69,3 +68,9 @@ Machine Learning: https://github.com/aydinnyunus/Machine-Learning
 
 Face Recognition Security: https://github.com/aydinnyunus/FaceRecognitionSecurity
 
+
+
+---
+
+Legality:
+This was a program designed for educational purposes only. I do not accept any responsiblity for the usage of the software for illegal or malicious purposes, nor do I condone it.

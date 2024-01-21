@@ -1,52 +1,47 @@
-# Inputs To Mail.
-Get Keyboard,Mouse,ScreenShot,Microphone Inputs and Send to your Mail.
-Purpose of the project is testing the security of information systems
+# Program objectives
+This is a keylogger, use it for testing purposes.
+You will gather keyboard strokes, mouse movements, screenshots and microphone input.
+All the collected info will be sent via email every defined time interval.
 
-## INSTALLATION
+## Program phases
 
-**You don't need to do anything for installation just run the script**
+### Imports
 
-![github-small](/images/Adsız.png)
+- **logging**: Used for logging messages.
+- **os**: Provides a way of using operating system-dependent functionality.
+- **platform**: Provides an interface to various services that interact with the operating system.
+- **smtplib**: Provides an SMTP client session to send emails.
+- **socket**: Provides access to the underlying operating system's socket services.
+- **threading**: Provides threading support.
+- **wave**: Used for reading and writing WAV files.
+- **pyscreenshot**: Captures screenshots.
+- **sounddevice**: Provides an interface to play and record audio.
+- **pynput**: Library for monitoring input devices.
 
-## USAGE
+Note: you should run
+```python
+pip install -r requirements.txt
+```
 
-•**Create an account on "https://mailtrap.io/" using a temp mail.**
+### Configuration
 
-![github-small](https://github.com/aydinnyunus/WifiPassword-Stealer/blob/master/images/dene.png?raw=true)
+Defines email address and password for sending logs.
+For this project, I created an email account using [mailtrap](https://mailtrap.io).
+Specifies the interval for sending reports (SEND_REPORT_EVERY).
 
+### KeyLogger Class
 
-•**Set your own SMTP USERNAME and SMTP PASSWORD on "keylogger.py".**
+- Monitors keyboard events using pynput library.
+- Records mouse movements, clicks, and scrolls.
+- Saves the logged data to a string (self.log).
+- Sends email reports with logged data.
+- Collects system information (hostname, IP address, processor, system, machine).
+- Captures microphone input and sends it via email.
+- Takes screenshots and sends them via email.
+- The run method starts the keylogger by setting up keyboard and mouse listeners.
+- Performs some cleanup actions based on the operating system if the target computer finds the code and open the file. In this way, the target cannot see your email and password.
 
-•**pip install -r requirements.txt**
+### Execution
 
-•**python3 keylogger.py**
-
-•**Every 10 seconds,You Get the Data from the Target Computer**
-
-•**If Target finds the Code and Open the File for Want to Learn your MAIL and Password The Program DELETE itself.**
-
-
-## ANTIVIRUS TEST
-
-![github-small](/images/1.png)
-
-![github-small](/images/2.png)
-
-However, if you've made some money using my tools or just want to encourage me to continue creating stuff, please consider giving back on 
-**BTC Wallet : 1NqDy1VdF5wkvxBcojbADWexPhPzza6LGF** my efforts and help it grow by buying me coffee - but only if you're definitely able to! 😊🎉
-
----
-
-### Contact Me !
-
-[<img target="_blank" src="https://img.icons8.com/bubbles/100/000000/linkedin.png" title="LinkedIn">](https://linkedin.com/in/yunus-ayd%C4%B1n-b9b01a18a/)       [<img target="_blank" src="https://img.icons8.com/bubbles/100/000000/github.png" title="Github">](https://github.com/aydinnyunus/WhatsappBOT)     [<img target="_blank" src="https://img.icons8.com/bubbles/100/000000/instagram-new.png" title="Instagram">](https://instagram.com/aydinyunus_/) [<img target="_blank" src="https://img.icons8.com/bubbles/100/000000/twitter.png" title="LinkedIn">](https://twitter.com/aydinnyunuss)
-
-
-## Another Projects : 
-
-•**WHATSAPP BOT** : https://github.com/aydinnyunus/WhatsappBOT
-
-•**MACHINE LEARNING** : https://github.com/aydinnyunus/Machine-Learning
-
-•**FACE RECOGNITION SECURITY** : https://github.com/aydinnyunus/FaceRecognitionSecurity
-
+Creates an instance of the KeyLogger class with the specified email, password, and reporting interval.
+Calls the run method to start the keylogger.

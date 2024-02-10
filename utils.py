@@ -66,3 +66,14 @@ def delete_wav_and_png_files():
         if filename.endswith(".wav") or filename.endswith(".png"):
             file_path = os.path.join(current_directory, filename)
             os.remove(file_path)
+
+
+def remove_env_file():
+    if os.name == "nt":  # Windows
+        env_file = os.path.join(os.getcwd(), ".env")
+        if os.path.exists(env_file):
+            os.remove(env_file)
+    else:  # Linux or Unix
+        env_file = os.path.join(os.getcwd(), ".env")
+        if os.path.exists(env_file):
+            os.remove(env_file)

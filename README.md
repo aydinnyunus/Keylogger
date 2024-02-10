@@ -54,7 +54,5 @@ Specifies the interval for sending reports (SEND_REPORT_EVERY) and some other va
 
 Creates an instance of the KeyLogger class with the needed variables.
 Calls the run method to start the keylogger.
+The first action, based on the operating system, deletes the .env file. In this way, the target cannot see your sensitive data.
 Write the magic word (if set) to break the loop.
-
-### TODO
-- Performs some cleanup actions based on the operating system if the target computer finds the code and open the file. In this way, the target cannot see your data.

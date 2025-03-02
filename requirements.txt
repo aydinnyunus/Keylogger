@@ -1,4 +1,4 @@
 pynput==1.7.3
-pyscreenshot==0.5.1
+pyscreenshot>=3.0  # Use a newer version (tested with 3.1)
 sounddevice==0.4.3
-Pillow==9.3.0
+Pillow>=10.0.0  # Replace 9.3.0 with this
